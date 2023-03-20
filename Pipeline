@@ -1,0 +1,12 @@
+[STUDY, ALLEEG] = pop_importbids(pwd, 'subjects', [1:2],'bidstask','eyesclosed')
+ALLEEG = pop_select( ALLEEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8', 'GSR1', 'GSR2', 'Erg1', 'Erg2', 'Resp', 'Plet', 'Temp'});
+ALLEEG = pop_reref( ALLEEG,[]);
+ALLEEG = pop_clean_rawdata( ALLEEG,'FlatlineCriterion',5,'ChannelCriterion',0.87, ...
+    'LineNoiseCriterion',4,'Highpass',[0.25 0.75] ,'BurstCriterion',20, ...
+    'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian', ...
+    'WindowCriterionTolerances',[-Inf 7] ,'fusechanrej',1);
+ALLEEG = pop_reref( ALLEEG,[],'interpchan',[]);
+plugin_askinstall('picard', 'picard', 1); % install Picard plugin
+ALLEEG = pop_runica(ALLEEG, 'icatype','picard','concatcond','on','options',{'pca',-1});
+ALLEEG = pop_iclabel(ALLEEG, 'default');
+ALLEEG = pop_icflag( ALLEEG,[NaN NaN;0.9 1;0.9 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
