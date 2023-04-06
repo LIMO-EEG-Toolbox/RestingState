@@ -9,6 +9,7 @@ rng('default');
 rawdata_path  = '/indirect/staff/cyrilpernet/ds004148';
 epoch_length  = 2; % seconds
 epoch_overlap = 0.25; % 25% overlap allowed
+nsess         = 3; % 3 sessions per subject
 
 [ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab;
 if ~exist('pop_importbids','file')
@@ -30,7 +31,6 @@ end
 % import data and remove unwanted channels
 [STUDY, ALLEEG] = pop_importbids(rawdata_path, ...
     'outputdir',fullfile(rawdata_path,'derivatives'),...
-    'subjects', 1:2,...
     'bidsevent','off',...
     'bidstask','task-eyesclosed');
 ALLEEG = pop_select( ALLEEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8', 'GSR1', 'GSR2', 'Erg1', 'Erg2', 'Resp', 'Plet', 'Temp'});
@@ -51,6 +51,7 @@ drawnow
 % eye and muscle artefacts, delete bad segments
 
 for s=1:size(ALLEEG,2)
+    try
     % downsample
     if ALLEEG(s).srate ~= 250
         ALLEEG(s) = pop_resample(ALLEEG(s), 250);
@@ -88,9 +89,33 @@ for s=1:size(ALLEEG,2)
     ALLEEG(s) = eeg_regepochs(ALLEEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
         'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
     ALLEEG(s) = pop_epoch(ALLEEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+    catch pipe_error
+        error_report{s} = pipe_error.message;
+    end
+    
+% Save study
+if exist('error_report','var')
+    mask = cellfun(@(x) ~isempty(x), error_report); % which subject/session
+    ALLEEG(mask)           = []; % delete from data structure
+    % find subject names
+    idx2 = 1;
+    bad_sub = cell(1,length(find(mask)));
+    for idx = find(mask)
+        if ~isempty(STUDY.datasetinfo(idx).subject)
+            bad_sub{idx2} = STUDY.datasetinfo(idx).subject;
+            idx2=idx2+1;
+        end
+    end
+    % delete from STUDY if all 3 sessions are bad
+    bad_names = unique(bad_sub);
+    for s=1:length(bad_names)
+        if sum(strcmp(bad_names{s},bad_sub)) == nsess
+            STUDY.subject(strcmp(bad_names{s},STUDY.subject)) = [];
+        end
+    end
+    STUDY.datasetinfo(mask) = [];
 end
 
-% Save study
 STUDY = pop_savestudy(STUDY, ALLEEG, ...
     'filename', 'Resting_state', ...
     'filepath', fullfile(rawdata_path,'derivatives'));
