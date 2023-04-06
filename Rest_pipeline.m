@@ -47,52 +47,53 @@ title('EEG channels')
 drawnow
 
 % for each subject, downsample, clean 50Hz, remove bad channels,
-% interpolate, re-reference to the average, run ICA to remove 
+% interpolate, re-reference to the average, run ICA to remove
 % eye and muscle artefacts, delete bad segments
 
 for s=1:size(ALLEEG,2)
     try
-    % downsample
-    if ALLEEG(s).srate ~= 250
-        ALLEEG(s) = pop_resample(ALLEEG(s), 250);
-    end
-    % 50Hz removal
-    ALLEEG(s) = pop_zapline_plus(ALLEEG(s),'noisefreqs','line',...
-        'coarseFreqDetectPowerDiff',4,'chunkLength',0,...
-        'adaptiveNremove',1,'fixedNremove',1,'plotResults',0);
-    % remove bad channels
-    ALLEEG(s) = pop_clean_rawdata( ALLEEG(s),'FlatlineCriterion',5,'ChannelCriterion',0.87, ...
-        'LineNoiseCriterion',4,'Highpass',[0.25 0.75] ,'BurstCriterion',20, ...
-        'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian', ...
-        'WindowCriterionTolerances',[-Inf 7]);
-    % interpolate missing channels and reference 
-    [~,idx] = setdiff({AvgChanlocs.expected_chanlocs.labels},{ALLEEG(s).chanlocs.labels});
-    if ~isempty(idx)
-        ALLEEG(s) = pop_interp(ALLEEG(s), AvgChanlocs.expected_chanlocs(idx), 'spherical');
-    end
-    ALLEEG(s) = pop_reref(ALLEEG(s),[],'interpchan','off');
-    
-    % ICA cleaning
-    ALLEEG(s) = pop_runica(ALLEEG(s), 'icatype','picard','concatcond','on','options',{'pca',ALLEEG(s).nbchan-1});
-    ALLEEG(s) = pop_iclabel(ALLEEG(s), 'default');
-    ALLEEG(s) = pop_icflag(ALLEEG(s),[NaN NaN;0.8 1;0.8 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
-    ALLEEG(s) = pop_subcomp(ALLEEG(s),[],0);
-    
-    % clear data using ASR - just the bad segment
-    ALLEEG(s) = pop_clean_rawdata(ALLEEG(s),'FlatlineCriterion','off','ChannelCriterion','off',...
-        'LineNoiseCriterion','off','Highpass','off','BurstCriterion',20,...
-        'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian',...
-        'WindowCriterionTolerances',[-Inf 7] );
-    
-    % epoching -- add random markers to create epochs we can use for power,
-    % correlations, etc ...
-    ALLEEG(s) = eeg_regepochs(ALLEEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
-        'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
-    ALLEEG(s) = pop_epoch(ALLEEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+        % downsample
+        if ALLEEG(s).srate ~= 250
+            ALLEEG(s) = pop_resample(ALLEEG(s), 250);
+        end
+        % 50Hz removal
+        ALLEEG(s) = pop_zapline_plus(ALLEEG(s),'noisefreqs','line',...
+            'coarseFreqDetectPowerDiff',4,'chunkLength',0,...
+            'adaptiveNremove',1,'fixedNremove',1,'plotResults',0);
+        % remove bad channels
+        ALLEEG(s) = pop_clean_rawdata( ALLEEG(s),'FlatlineCriterion',5,'ChannelCriterion',0.87, ...
+            'LineNoiseCriterion',4,'Highpass',[0.25 0.75] ,'BurstCriterion',20, ...
+            'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian', ...
+            'WindowCriterionTolerances',[-Inf 7]);
+        % interpolate missing channels and reference
+        [~,idx] = setdiff({AvgChanlocs.expected_chanlocs.labels},{ALLEEG(s).chanlocs.labels});
+        if ~isempty(idx)
+            ALLEEG(s) = pop_interp(ALLEEG(s), AvgChanlocs.expected_chanlocs(idx), 'spherical');
+        end
+        ALLEEG(s) = pop_reref(ALLEEG(s),[],'interpchan','off');
+        
+        % ICA cleaning
+        ALLEEG(s) = pop_runica(ALLEEG(s), 'icatype','picard','concatcond','on','options',{'pca',ALLEEG(s).nbchan-1});
+        ALLEEG(s) = pop_iclabel(ALLEEG(s), 'default');
+        ALLEEG(s) = pop_icflag(ALLEEG(s),[NaN NaN;0.8 1;0.8 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
+        ALLEEG(s) = pop_subcomp(ALLEEG(s),[],0);
+        
+        % clear data using ASR - just the bad segment
+        ALLEEG(s) = pop_clean_rawdata(ALLEEG(s),'FlatlineCriterion','off','ChannelCriterion','off',...
+            'LineNoiseCriterion','off','Highpass','off','BurstCriterion',20,...
+            'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian',...
+            'WindowCriterionTolerances',[-Inf 7] );
+        
+        % epoching -- add random markers to create epochs we can use for power,
+        % correlations, etc ...
+        ALLEEG(s) = eeg_regepochs(ALLEEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
+            'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
+        ALLEEG(s) = pop_epoch(ALLEEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
     catch pipe_error
-        error_report{s} = pipe_error.message;
+        error_report{s} = pipe_error.message; %#ok<SAGROW>
     end
-    
+end
+
 % Save study
 if exist('error_report','var')
     mask = cellfun(@(x) ~isempty(x), error_report); % which subject/session
