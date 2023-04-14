@@ -1,18 +1,20 @@
-     #Create source model using dipfit
-     EEG = pop_dipfit_settings( EEG, 'hdmfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_vol.mat','mrifile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_mri.mat','chanfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\elec\\standard_1005.elc','coordformat','MNI','coord_transform',[0 0 0 0 0 0 1 1 1] ,'chansel',[1:61] );
-     EEG = pop_multifit(EEG, [1:55] ,'threshold',100,'plotopt',{'normlen','on'});
-     EEG = pop_leadfield(EEG, 'sourcemodel','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\LORETA-Talairach-BAs.mat','sourcemodel2mni',[],'downsample',1);
-     
-     #Calculating activity using ROI connect
-     EEG = pop_roi_activity(EEG, 'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);'
-     #calculate connectivity using ROI connect.
-     #We simply select the methods we want to calculate in the connectivity window in the ROI GUI. Autoregressive model order is 20 and no bootstrap.
-     # This is the error code
-     'Operands to the logical AND (&&) and OR (||) operators must be convertible to logical scalar values. Use the ANY or ALL functions
-to reduce operands to logical scalar values.
+EEG = pop_dipfit_settings( EEG, 'hdmfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_vol.mat','mrifile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_mri.mat','chanfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\elec\\standard_1005.elc','coordformat','MNI','coord_transform',[0 0 0 0 0 0 1 1 1] ,'chansel',[1:61] );
+EEG = pop_multifit(EEG, [1:55] ,'threshold',100,'plotopt',{'normlen','on'});
+EEG = pop_roi_activity(EEG, 'leadfield',EEG.dipfit.sourcemodel,'model','LCMV','modelparams',{0.05},'atlas','LORETA-Talairach-BAs','nPCA',3, 'fooof', 'on', 'fooof_frange', [1 30]);
+EEG = pop_roi_connect(EEG, 'methods', { 'MIM', 'TRGC', 'CS', 'COH'}, 'snippet', 'on', 'snip_length', 60, 'fcsave_format', 'mean_snips');
 
-Error in eeglab>updatemenu (line 1545)
-    if ~isempty(ALLEEG) && CURRENTSET~= 0 &&  ~isequal(EEG.data, ALLEEG(CURRENTSET).data)
+#Error message from roi_connect
+Unrecognized function or variable 'desired_nfreq'.
 
-Error in eeglab (line 414)
-			updatemenu;'
+Error in data2cs_event (line 114)
+        if desired_nfreq ~= 0
+
+Error in data2spwctrgc (line 108)
+    CS = data2cs_event(data(:, :)',ndat, ndat - (floor(ndat/2)), ndat , [], CSpara);
+
+Error in roi_connect (line 121)
+        conn_mult = data2spwctrgc(source_roi_data, EEG.pnts, g.morder, 0, g.naccu, [], tmpMethods2);
+
+Error in pop_roi_connect (line 219)
+        EEG = roi_connect(EEG, 'morder', g.morder, 'naccu', g.naccu, 'methods', g.methods,'freqresolution',g.freqresolution); % compute connectivity over one snippet
+ 
