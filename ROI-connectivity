@@ -1,7 +1,7 @@
 EEG = pop_dipfit_settings( EEG, 'hdmfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_vol.mat','mrifile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_mri.mat','chanfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\elec\\standard_1005.elc','coordformat','MNI','coord_transform',[0 0 0 0 0 0 1 1 1] ,'chansel',[1:61] );
 EEG = pop_multifit(EEG, [1:55] ,'threshold',100,'plotopt',{'normlen','on'});
-EEG = pop_roi_activity(EEG, 'leadfield',EEG.dipfit.sourcemodel,'model','LCMV','modelparams',{0.05},'atlas','LORETA-Talairach-BAs','nPCA',3, 'fooof', 'on', 'fooof_frange', [1 30]);
-EEG = pop_roi_connect(EEG, 'methods', { 'MIM', 'TRGC', 'CS', 'COH'}, 'snippet', 'on', 'snip_length', 60, 'fcsave_format', 'mean_snips');
+EEG = pop_roi_activity(EEG, 'leadfield',EEG.dipfit.sourcemodel,'model','LCMV','modelparams',{0.05},'atlas','LORETA-Talairach-BAs','nPCA',3, 'fooof', 'off');
+EEG = pop_roi_connect(EEG, 'methods', { 'CS', 'COH'}, 'snippet', 'on', 'snip_length', 60, 'fcsave_format', 'mean_snips');
 
 #Error message from roi_connect
 Unrecognized function or variable 'desired_nfreq'.
