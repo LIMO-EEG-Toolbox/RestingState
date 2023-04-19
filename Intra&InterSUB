@@ -8,7 +8,7 @@ diff_ses01and03 = abs(mean(mean(cell2mat(indexes.COR.data(1:1,1:10)))) - mean(me
 diff_ses02and03 = abs(mean(mean(cell2mat(indexes.COR.data(2:2,1:10)))) - mean(mean(cell2mat(indexes.COR.data(3:3,1:10)))))
 avg_diff_between_allsessions = (diff_ses01and02 + diff_ses01and03 + diff_ses01and03)/3
 
-%I get an average difference when comparing all the sessions on 0.00022941 which means the difference in the averaged correlation between session is very, very small
+%I get an average difference when comparing all the sessions on 0.00022941
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
