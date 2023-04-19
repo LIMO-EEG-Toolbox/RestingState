@@ -1,4 +1,5 @@
 %This is calculated using HERMES classis measure "Correlation" (Pearson’s correlation coefficient COR) on the 10 first subjects including 3 sessions on each subject
+#Epoching length sat to 2000 ms and overlapping to 25%
 
 
 %Average difference (of the averaged correlation of each session) between sessions:
