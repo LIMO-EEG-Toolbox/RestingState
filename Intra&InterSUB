@@ -10,8 +10,7 @@ avg_diff_between_allsessions = (diff_ses01and02 + diff_ses01and03 + diff_ses01an
 
 %I get an average difference when comparing all the sessions on 0.00022941 which means the difference in the averaged correlation between session is very, very small
 
-_____________________________________________________________________________________________________________________________________________________
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %Intra subject difference between sessions:
 intra_sub_diff_in_sessions = 0
@@ -25,7 +24,7 @@ averaged_isdis = intra_sub_diff_in_sessions/10
 
 %The average of the averaged difference between each session for each subject is = 0.0065
 
-__________________________________________________________________________________________________________________________________________________________
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %Inter_sub_diff_in_session_01
