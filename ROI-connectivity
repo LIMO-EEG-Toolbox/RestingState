@@ -1,20 +1,10 @@
-EEG = pop_dipfit_settings( EEG, 'hdmfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_vol.mat','mrifile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_mri.mat','chanfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\elec\\standard_1005.elc','coordformat','MNI','coord_transform',[0 0 0 0 0 0 1 1 1] ,'chansel',[1:61] );
-EEG = pop_multifit(EEG, [1:55] ,'threshold',100,'plotopt',{'normlen','on'});
-EEG = pop_roi_activity(EEG, 'leadfield',EEG.dipfit.sourcemodel,'model','LCMV','modelparams',{0.05},'atlas','LORETA-Talairach-BAs','nPCA',3, 'fooof', 'off');
-EEG = pop_roi_connect(EEG, 'methods', { 'CS', 'COH'}, 'snippet', 'on', 'snip_length', 60, 'fcsave_format', 'mean_snips');
+ % multiple datasets command: EEG = pop_dipfit_settings( EEG,'hdmfile',file_path,'mrifile',path_file,'chanfile',path_file,'coordformat','MNI','chansel',[1:61] );
+     % multiple datasets command: EEG = pop_multifit( EEG,[],'threshold',100,'plotopt',{'normlen','on'});
+     % multiple datasets command: EEG = pop_leadfield( EEG,'sourcemodel',path_file,'sourcemodel2mni',[],'downsample',1);
+     % multiple datasets command: EEG = pop_roi_activity( EEG,'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'CS'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'wPLI'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIM'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIC'},'nepochs',179);'
 
-#Error message from roi_connect
-Unrecognized function or variable 'desired_nfreq'.
-
-Error in data2cs_event (line 114)
-        if desired_nfreq ~= 0
-
-Error in data2spwctrgc (line 108)
-    CS = data2cs_event(data(:, :)',ndat, ndat - (floor(ndat/2)), ndat , [], CSpara);
-
-Error in roi_connect (line 121)
-        conn_mult = data2spwctrgc(source_roi_data, EEG.pnts, g.morder, 0, g.naccu, [], tmpMethods2);
-
-Error in pop_roi_connect (line 219)
-        EEG = roi_connect(EEG, 'morder', g.morder, 'naccu', g.naccu, 'methods', g.methods,'freqresolution',g.freqresolution); % compute connectivity over one snippet
  
