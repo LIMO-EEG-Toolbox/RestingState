@@ -33,7 +33,6 @@ end
     'outputdir',fullfile(rawdata_path,'derivatives'),...
     'bidsevent','off',...
     'bidstask','task-eyesclosed');
-ALLEEG = pop_select( ALLEEG,'nochannel',{'EXG1','EXG2','EXG3','EXG4','EXG5','EXG6','EXG7','EXG8', 'GSR1', 'GSR2', 'Erg1', 'Erg2', 'Resp', 'Plet', 'Temp'});
 STUDY = pop_statparams(STUDY, 'default');
 [~,~,AvgChanlocs] = std_prepare_neighbors(STUDY, ALLEEG, 'force', 'on');
 channel_info = AvgChanlocs.expected_chanlocs;
@@ -50,45 +49,45 @@ drawnow
 % interpolate, re-reference to the average, run ICA to remove
 % eye and muscle artefacts, delete bad segments
 
-for s=1:size(ALLEEG,2)
+for s=1:size(EEG,2)
     try
         % downsample
-        if ALLEEG(s).srate ~= 250
-            ALLEEG(s) = pop_resample(ALLEEG(s), 250);
+        if EEG(s).srate ~= 250
+            EEG(s) = pop_resample(EEG(s), 250);
         end
         % 50Hz removal
-        ALLEEG(s) = pop_zapline_plus(ALLEEG(s),'noisefreqs','line',...
+        EEG(s) = pop_zapline_plus(EEG(s),'noisefreqs','line',...
             'coarseFreqDetectPowerDiff',4,'chunkLength',0,...
             'adaptiveNremove',1,'fixedNremove',1,'plotResults',0);
         % remove bad channels
-        ALLEEG(s) = pop_clean_rawdata( ALLEEG(s),'FlatlineCriterion',5,'ChannelCriterion',0.87, ...
+        EEG(s) = pop_clean_rawdata( EEG(s),'FlatlineCriterion',5,'ChannelCriterion',0.87, ...
             'LineNoiseCriterion',4,'Highpass',[0.25 0.75] ,'BurstCriterion',20, ...
             'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian', ...
             'WindowCriterionTolerances',[-Inf 7]);
         % interpolate missing channels and reference
-        [~,idx] = setdiff({AvgChanlocs.expected_chanlocs.labels},{ALLEEG(s).chanlocs.labels});
+        [~,idx] = setdiff({AvgChanlocs.expected_chanlocs.labels},{EEG(s).chanlocs.labels});
         if ~isempty(idx)
-            ALLEEG(s) = pop_interp(ALLEEG(s), AvgChanlocs.expected_chanlocs(idx), 'spherical');
+            EEG(s) = pop_interp(EEG(s), AvgChanlocs.expected_chanlocs(idx), 'spherical');
         end
-        ALLEEG(s) = pop_reref(ALLEEG(s),[],'interpchan','off');
+        EEG(s) = pop_reref(EEG(s),[],'interpchan','off');
         
         % ICA cleaning
-        ALLEEG(s) = pop_runica(ALLEEG(s), 'icatype','picard','concatcond','on','options',{'pca',ALLEEG(s).nbchan-1});
-        ALLEEG(s) = pop_iclabel(ALLEEG(s), 'default');
-        ALLEEG(s) = pop_icflag(ALLEEG(s),[NaN NaN;0.8 1;0.8 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
-        ALLEEG(s) = pop_subcomp(ALLEEG(s),[],0);
+        EEG(s) = pop_runica(EEG(s), 'icatype','picard','concatcond','on','options',{'pca',EEG(s).nbchan-1});
+        EEG(s) = pop_iclabel(EEG(s), 'default');
+        EEG(s) = pop_icflag(EEG(s),[NaN NaN;0.8 1;0.8 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
+        EEG(s) = pop_subcomp(EEG(s),[],0);
         
         % clear data using ASR - just the bad segment
-        ALLEEG(s) = pop_clean_rawdata(ALLEEG(s),'FlatlineCriterion','off','ChannelCriterion','off',...
+        EEG(s) = pop_clean_rawdata(EEG(s),'FlatlineCriterion','off','ChannelCriterion','off',...
             'LineNoiseCriterion','off','Highpass','off','BurstCriterion',20,...
             'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian',...
             'WindowCriterionTolerances',[-Inf 7] );
         
         % epoching -- add random markers to create epochs we can use for power,
         % correlations, etc ...
-        ALLEEG(s) = eeg_regepochs(ALLEEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
+        EEG(s) = eeg_regepochs(EEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
             'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
-        ALLEEG(s) = pop_epoch(ALLEEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+        EEG(s) = pop_epoch(EEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
     catch pipe_error
         error_report{s} = pipe_error.message; %#ok<SAGROW>
     end
@@ -97,7 +96,7 @@ end
 % Save study
 if exist('error_report','var')
     mask = cellfun(@(x) ~isempty(x), error_report); % which subject/session
-    ALLEEG(mask)           = []; % delete from data structure
+    EEG(mask)           = []; % delete from data structure
     % find subject names
     idx2 = 1;
     bad_sub = cell(1,length(find(mask)));
@@ -117,7 +116,7 @@ if exist('error_report','var')
     STUDY.datasetinfo(mask) = [];
 end
 
-STUDY = pop_savestudy(STUDY, ALLEEG, ...
+STUDY = pop_savestudy(STUDY, EEG, ...
     'filename', 'Resting_state', ...
     'filepath', fullfile(rawdata_path,'derivatives'));
 
@@ -126,9 +125,9 @@ STUDY = pop_savestudy(STUDY, ALLEEG, ...
 % export data
 hermes = fullfile(rawdata_path,['derivatives' filesep 'HERMES']);
 mkdir(hermes)
-for s=1:size(ALLEEG,2)
-    tmp = ALLEEG(s).data;
-    [~,name] = fileparts(ALLEEG(s).filename);
+for s=1:size(EEG,2)
+    tmp = EEG(s).data;
+    [~,name] = fileparts(EEG(s).filename);
     save(fullfile(hermes,[name '.mat']),'tmp')
 end
 
