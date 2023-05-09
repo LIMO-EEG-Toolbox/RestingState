@@ -1,0 +1,37 @@
+%This is calculated using HERMES classis measure "Correlation" (Pearson’s correlation coefficient COR) on the 10 first subjects including 3 sessions on each subject
+#Epoching length sat to 2000 ms and overlapping to 25%
+
+
+%Average difference (of the averaged correlation of each session) between sessions:
+diff_ses01and02 = abs(mean(mean(cell2mat(indexes.COR.data(1:1,1:10)))) - mean(mean(cell2mat(indexes.COR.data(2:2,1:10)))))
+diff_ses01and03 = abs(mean(mean(cell2mat(indexes.COR.data(1:1,1:10)))) - mean(mean(cell2mat(indexes.COR.data(3:3,1:10)))))
+diff_ses02and03 = abs(mean(mean(cell2mat(indexes.COR.data(2:2,1:10)))) - mean(mean(cell2mat(indexes.COR.data(3:3,1:10)))))
+avg_diff_between_allsessions = (diff_ses01and02 + diff_ses01and03 + diff_ses01and03)/3
+
+%I get an average difference when comparing all the sessions on 0.00022941
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Intra subject difference between sessions:
+intra_sub_diff_in_sessions = 0
+for s=1:size(indexes.COR.data,2)
+mean_ses_01 = mean(mean(cell2mat(indexes.COR.data(1:1,s:s))))
+mean_ses_02 = mean(mean(cell2mat(indexes.COR.data(2:2,s:s))))
+mean_ses_03 = mean(mean(cell2mat(indexes.COR.data(3:3,s:s))))
+intra_sub_diff_in_sessions = intra_sub_diff_in_sessions + ((abs(mean_ses_01-mean_ses_02)+abs(mean_ses01-mean_ses_03))/2)
+end
+averaged_isdis = intra_sub_diff_in_sessions/10
+
+%The average of the averaged difference between each session for each subject is = 0.0065
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%Inter_sub_diff_in_session_01
+
+summed_diffs = 0
+for i=2:size(indexes.COR.data,2)
+ summed_diffs = summed_diffs + abs(mean_sub01_ses01 - mean(mean(cell2mat((indexes.COR.data(1:1,i:i))))))
+end
+
+inter_sub_diff_in_ses01 = summed_diffs/9

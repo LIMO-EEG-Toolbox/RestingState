@@ -1,0 +1,10 @@
+ % multiple datasets command: EEG = pop_dipfit_settings( EEG,'hdmfile',file_path,'mrifile',path_file,'chanfile',path_file,'coordformat','MNI','chansel',[1:61] );
+     % multiple datasets command: EEG = pop_multifit( EEG,[],'threshold',100,'plotopt',{'normlen','on'});
+     % multiple datasets command: EEG = pop_leadfield( EEG,'sourcemodel',path_file,'sourcemodel2mni',[],'downsample',1);
+     % multiple datasets command: EEG = pop_roi_activity( EEG,'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'CS'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'wPLI'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIM'},'nepochs',179);
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIC'},'nepochs',179);'
+
+ 
