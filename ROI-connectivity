@@ -1,10 +1,31 @@
- % multiple datasets command: EEG = pop_dipfit_settings( EEG,'hdmfile',file_path,'mrifile',path_file,'chanfile',path_file,'coordformat','MNI','chansel',[1:61] );
+  % multiple datasets command: EEG = pop_dipfit_settings( EEG,'hdmfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_vol.mat','mrifile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\standard_mri.mat','chanfile','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\standard_BEM\\elec\\standard_1005.elc','coordformat','MNI','chansel',[1:61] );
      % multiple datasets command: EEG = pop_multifit( EEG,[],'threshold',100,'plotopt',{'normlen','on'});
-     % multiple datasets command: EEG = pop_leadfield( EEG,'sourcemodel',path_file,'sourcemodel2mni',[],'downsample',1);
+     % multiple datasets command: EEG = pop_leadfield( EEG,'sourcemodel','C:\\Users\\yaron\\Downloads\\eeglab2022.1\\plugins\\dipfit5.2\\LORETA-Talairach-BAs.mat','sourcemodel2mni',[],'downsample',1);
      % multiple datasets command: EEG = pop_roi_activity( EEG,'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
-     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'CS'},'nepochs',179);
-     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'wPLI'},'nepochs',179);
-     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIM'},'nepochs',179);
-     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'MIC'},'nepochs',179);'
+     % multiple datasets command: TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'CS','COH','wPLI','MIM','MIC'},'nepochs',182);'
 
- 
+EEG.roi
+ans = 
+
+  struct with fields:
+
+                   cortex: [1×1 struct]
+                    atlas: [1×1 struct]
+          source_roi_data: [105×200×182 single]
+         source_roi_power: [101×35 double]
+    source_roi_power_norm: [152872480 321434944 413546592 446257472 146797280 384365152 332788992 397920544 413438112 … ]
+                    freqs: [101×1 double]
+                     nPCA: 3
+                     nROI: 35
+                    srate: 100
+                leadfield: [1×1 struct]
+                headmodel: 'C:\Users\yaron\Downloads\eeglab2022.1\plugins\dipfit5.2\standard_BEM\standard_vol.mat'
+               parameters: {1×22 cell}
+                P_eloreta: [61×2472×3 single]
+                      MIC: [101×35×35 double]
+                      MIM: [101×35×35 double]
+                     wPLI: [101×35×35 double]
+                    nlags: 20
+                     inds: {1×595 cell}
+                      COH: [101×35×35 double]
+                       CS: [101×35×35 double]
