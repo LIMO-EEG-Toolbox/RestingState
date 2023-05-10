@@ -132,3 +132,23 @@ end
  EEG = pop_leadfield( EEG,'sourcemodel','path_to_eeglab2022.1\\plugins\\dipfit5.2\\LORETA-Talairach-BAs.mat','sourcemodel2mni',[],'downsample',1);
  EEG = pop_roi_activity( EEG,'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
  TMPEEG = pop_roi_connect( TMPEEG,'morder',20,'naccu',[],'methods',{'CS','COH','wPLI','MIM','MIC'},'nepochs',182);'
+
+#convert to a csv file.
+for i = 1:numel(EEG)
+    csData = EEG(i).roi.CS;
+    cohData = EEG(i).roi.COH;
+    wpliData = EEG(i).roi.wPLI;
+    mimData = EEG(i).roi.MIM;
+    micData = EEG(i).roi.MIC;
+    
+    combinedData{i, 1} = csData;
+    combinedData{i, 2} = cohData;
+    combinedData{i, 3} = wpliData;
+    combinedData{i, 4} = mimData;
+    combinedData{i, 5} = micData;
+end
+
+combinedTable = cell2table(combinedData, 'VariableNames', {'CS', 'COH', 'wPLI', 'MIM', 'MIC'});
+writetable(combinedTable, 'ROI.csv');
+
+
