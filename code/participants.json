@@ -46,44 +46,44 @@
         "Description": "Overall score of the ESS during participants' second visit"
     },
 
-   "DiscontinuityofMind_session1": {
-        "Description": "Overall score of the first dimention of ARSQ2.0(DiscontinuityofMind) at session1"
+   "(1)Discontinuity of Mind_session1": {
+        "Description": "Overall score of the first dimention of ARSQ2.0(Discontinuity of Mind) at session1"
     },
 
-   "TheoryofMind_session1": {
-        "Description": "Overall score of the second dimention of ARSQ2.0(TheoryofMind) at session1"
+   "(2)Theory of Mind_session1": {
+        "Description": "Overall score of the second dimention of ARSQ2.0(Theory of Mind) at session1"
     },
 
-   "Self_session1": {
+   "(3)Self_session1": {
         "Description": "Overall score of the third dimention of ARSQ2.0(Self) at session1"
     },
 
-    "Planning_session1": {
+    "(4)Planning_session1": {
         "Description": "Overall score of the fourth dimention of ARSQ2.0(Planning) at session1"
     },
 
-    "Sleepiness_session1": {
+    "(5)Sleepiness_session1": {
         "Description": "Overall score of the fifth dimention of ARSQ2.0(Sleepiness) at session1"
     },
 
-    "Comfort_session1": {
+    "(6)Comfort_session1": {
         "Description": "Overall score of the sixth dimention of ARSQ2.0(Comfort) at session1"
     },
 
-    "SomaticAwareness_session1": {
-        "Description": "Overall score of the seventh dimention of ARSQ2.0(SomaticAwareness) at session1"
+    "(7)Somatic Awareness_session1": {
+        "Description": "Overall score of the seventh dimention of ARSQ2.0(Somatic Awareness) at session1"
     },
 
-    "HealthConcern_session1": {
-        "Description": "Overall score of the eighth dimention of ARSQ2.0(HealthConcern) at session1"
+    "(8)Health Concern_session1": {
+        "Description": "Overall score of the eighth dimention of ARSQ2.0(Health Concern) at session1"
     },
     
-    "VisualThought_session1": {
-        "Description": "Overall score of the ninth dimention of ARSQ2.0(VisualThought) at session1"
+    "(9)Visual Thought_session1": {
+        "Description": "Overall score of the ninth dimention of ARSQ2.0(Visual Thought) at session1"
     },
 
-    "VerbalThought_session1": {
-        "Description": "Overall score of the tenth dimention of ARSQ2.0(VerbalThought) at session1"
+    "(10)Verbal Thought_session1": {
+        "Description": "Overall score of the tenth dimention of ARSQ2.0(Verbal Thought) at session1"
     },
 
     "KSS_session1": {
@@ -99,7 +99,7 @@
     },
 
 
-    "Subtraction_Correct/Notcorrect_session1": {
+    "Subtraction_Correct/Not correct_session1": {
         "Description": "The corectness of the final answer during the Subtraction sate at session1",
         "Levels": {
             "1": "Correct",
@@ -108,56 +108,56 @@
         }
     },
 
-    "Subtraction_Thefinalnumber_session1": {
+    "Subtraction_The final number_session1": {
         "Description": "The final answer during the Subtraction sate at session1"  
     },
 
-    "MusicTimesofsingingmusiclyrics_session1": {
+    "Music Times of singing music lyrics_session1": {
         "Description": "Times of singing music lyrics during the music state at session1"  
     },
 
-    "Memory_Timesofrecall_session1": {
+    "Memory_Times of recall_session1": {
         "Description": "Times of recalling the events of the day from when participants awoke until they arrived at the lab during the memory state at session1"  
     },
 
-  "DiscontinuityofMind_session2": {
-        "Description": "Overall score of the first dimention of ARSQ2.0(DiscontinuityofMind) at session2"
+  "(1)Discontinuity of Mind_session2": {
+        "Description": "Overall score of the first dimention of ARSQ2.0(Discontinuity of Mind) at session2"
     },
 
-   "TheoryofMind_session2": {
-        "Description": "Overall score of the second dimention of ARSQ2.0(TheoryofMind) at session2"
+   "(2)Theory of Mind_session2": {
+        "Description": "Overall score of the second dimention of ARSQ2.0(Theory of Mind) at session2"
     },
 
-   "Self_session2": {
+   "(3)Self_session2": {
         "Description": "Overall score of the third dimention of ARSQ2.0(Self) at session2"
     },
 
-    "Planning_session2": {
+    "(4)Planning_session2": {
         "Description": "Overall score of the fourth dimention of ARSQ2.0(Planning) at session2"
     },
 
-    "Sleepiness_session2": {
+    "(5)Sleepiness_session2": {
         "Description": "Overall score of the fifth dimention of ARSQ2.0(Sleepiness) at session2"
     },
 
-    "Comfort_session2": {
+    "(6)Comfort_session2": {
         "Description": "Overall score of the sixth dimention of ARSQ2.0(Comfort) at session2"
     },
 
-    "SomaticAwareness_session2": {
-        "Description": "Overall score of the seventh dimention of ARSQ2.0(SomaticAwareness) at session2"
+    "(7)Somatic Awareness_session2": {
+        "Description": "Overall score of the seventh dimention of ARSQ2.0(Somatic Awareness) at session2"
     },
 
-    "HealthConcern_session2": {
-        "Description": "Overall score of the eighth dimention of ARSQ2.0(HealthConcern) at session2"
+    "(8)Health Concern_session2": {
+        "Description": "Overall score of the eighth dimention of ARSQ2.0(Health Concern) at session2"
     },
     
-    "VisualThought_session2": {
-        "Description": "Overall score of the ninth dimention of ARSQ2.0(VisualThought) at session2"
+    "(9)Visual Thought_session2": {
+        "Description": "Overall score of the ninth dimention of ARSQ2.0(Visual Thought) at session2"
     },
 
-    "VerbalThought_session2": {
-        "Description": "Overall score of the tenth dimention of ARSQ2.0(VerbalThought) at session2"
+    "(10)Verbal Thought_session2": {
+        "Description": "Overall score of the tenth dimention of ARSQ2.0(Verbal Thought) at session2"
     },
 
     "KSS_session2": {
@@ -173,7 +173,7 @@
     },
 
 
-    "Subtraction_Correct/Notcorrect_session2": {
+    "Subtraction_Correct/Not correct_session2": {
         "Description": "The corectness of the final answer during the Subtraction sate at session2",
         "Levels": {
             "1": "Correct",
@@ -182,56 +182,56 @@
         }
     },
 
-    "Subtraction_Thefinalnumber_session2": {
+    "Subtraction_The final number_session2": {
         "Description": "The final answer during the Subtraction sate at session2"  
     },
 
-    "MusicTimesofsingingmusiclyrics_session2": {
+    "Music Times of singing music lyrics_session2": {
         "Description": "Times of singing music lyrics during the music state at session2"  
     },
 
-    "Memory_Timesofrecall_session2": {
+    "Memory_Times of recall_session2": {
         "Description": "Times of recalling the events of the day from when participants awoke until they arrived at the lab during the memory state at session2"  
     },
 
-  "DiscontinuityofMind_session3": {
-        "Description": "Overall score of the first dimention of ARSQ2.0(DiscontinuityofMind) at session3"
+  "(1)Discontinuity of Mind_session3": {
+        "Description": "Overall score of the first dimention of ARSQ2.0(Discontinuity of Mind) at session3"
     },
 
-   "TheoryofMind_session3": {
-        "Description": "Overall score of the second dimention of ARSQ2.0(TheoryofMind) at session3"
+   "(2)Theory of Mind_session3": {
+        "Description": "Overall score of the second dimention of ARSQ2.0(Theory of Mind) at session3"
     },
 
-   "Self_session3": {
+   "(3)Self_session3": {
         "Description": "Overall score of the third dimention of ARSQ2.0(Self) at session3"
     },
 
-    "Planning_session3": {
+    "(4)Planning_session3": {
         "Description": "Overall score of the fourth dimention of ARSQ2.0(Planning) at session3"
     },
 
-    "Sleepiness_session3": {
+    "(5)Sleepiness_session3": {
         "Description": "Overall score of the fifth dimention of ARSQ2.0(Sleepiness) at session3"
     },
 
-    "Comfort_session3": {
+    "(6)Comfort_session3": {
         "Description": "Overall score of the sixth dimention of ARSQ2.0(Comfort) at session3"
     },
 
-    "SomaticAwareness_session3": {
-        "Description": "Overall score of the seventh dimention of ARSQ2.0(SomaticAwareness) at session3"
+    "(7)Somatic Awareness_session3": {
+        "Description": "Overall score of the seventh dimention of ARSQ2.0(Somatic Awareness) at session3"
     },
 
-    "HealthConcern_session3": {
-        "Description": "Overall score of the eighth dimention of ARSQ2.0(HealthConcern) at session3"
+    "(8)Health Concern_session3": {
+        "Description": "Overall score of the eighth dimention of ARSQ2.0(Health Concern) at session3"
     },
     
-    "VisualThought_session3": {
-        "Description": "Overall score of the ninth dimention of ARSQ2.0(VisualThought) at session3"
+    "(9)Visual Thought_session3": {
+        "Description": "Overall score of the ninth dimention of ARSQ2.0(Visual Thought) at session3"
     },
 
-    "VerbalThought_session3": {
-        "Description": "Overall score of the tenth dimention of ARSQ2.0(VerbalThought) at session3"
+    "(10)Verbal Thought_session3": {
+        "Description": "Overall score of the tenth dimention of ARSQ2.0(Verbal Thought) at session3"
     },
 
     "KSS_session3": {
@@ -247,7 +247,7 @@
     },
 
 
-    "Subtraction_Correct/Notcorrect_session3": {
+    "Subtraction_Correct/Not correct_session3": {
         "Description": "The corectness of the final answer during the Subtraction sate at session3",
         "Levels": {
             "1": "Correct",
@@ -256,15 +256,15 @@
         }
     },
 
-    "Subtraction_Thefinalnumber_session3": {
+    "Subtraction_The final number_session3": {
         "Description": "The final answer during the Subtraction sate at session3"  
     },
 
-    "MusicTimesofsingingmusiclyrics_session3": {
+    "Music Times of singing music lyrics_session3": {
         "Description": "Times of singing music lyrics during the music state at session3"  
     },
 
-    "Memory_Timesofrecall_session3": {
+    "Memory_Times of recall_session3": {
         "Description": "Times of recalling the events of the day from when participants awoke until they arrived at the lab during the memory state at session3"  
     },
 
