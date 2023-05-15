@@ -100,56 +100,49 @@ if exist('error_report','var')
     STUDY = std_rmdat(STUDY, EEG, 'datinds', find(mask));
     EEG(find(mask)) = [];
 end
-[STUDY,EEG] = pop_savestudy(STUDY,EEG,'savemode''resave');
 
 % figure; pop_spectopo(ALLEEG(1), 1, [], 'EEG' , 'freq', [2 10 22], 'freqrange',[5 60],'electrodes','off');
 
 %% connectivity [STUDY, EEG] = pop_loadstudy
 % Compute source level FCM on Regions of interest with ROI connect.
-vol       = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_vol.mat']);
-mri       = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_mri.mat']);
-elec      = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'elec' filesep 'standard_1005.elc']);
-leadfield = fullfile(fileparts(which("eegplugin_dipfit")),'LORETA-Talairach-BAs.mat');
-parfor s=2:size(EEG,2)
+vol           = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_vol.mat']);
+mri           = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_mri.mat']);
+elec          = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'elec' filesep 'standard_1005.elc']);
+leadfield     = fullfile(fileparts(which("eegplugin_dipfit")),'tess_cortex_mid_low_2000V.mat');
+connect_types = {'CS','COH','wPLI','MIM','MIC'};
+parfor s=1:size(EEG,2)
     EEG(s)  = pop_dipfit_settings( EEG(s),'hdmfile',vol,'mrifile',mri,'chanfile',elec, ...
         'coordformat','MNI','coord_transform',[4.4114e-06 -1.4064e-05 7.5546e-06 1.2424e-07 -1.614e-07 -1.5708 1 1 1] ,'chansel',1:61);
     % EEG(s)  = pop_multifit( EEG(s),[],'threshold',100,'plotopt',{'normlen','on'});
-    EEG(s)  = pop_leadfield( EEG(s),'sourcemodel',leadfield,'sourcemodel2mni',[],'downsample',1);
+    EEG(s)  = pop_leadfield( EEG(s),'sourcemodel',leadfield,'sourcemodel2mni',[0 -24 -45 0 0 -1.5708 1000 1000 1000],'downsample',1);
     EEG(s).roi = [];
-    EEG(s) = pop_roi_activity(EEG(s),'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
-    EEG(s) = pop_roi_connect(REEG(s),'morder',20,'naccu',[],'methods',{'CS','COH','wPLI','MIM','MIC'});
-    EEG(s) = pop_saveset(EEG(s),'savemode''resave');
+    EEG(s) = pop_roi_activity(EEG(s),'model','LCMV','modelparams',{0.05},'atlas','Desikan-Kilianny','nPCA',3);
+    EEG(s) = pop_roi_connect(EEG(s),'morder',20,'naccu',[],'methods',connect_types);
 end
+[STUDY,EEG] = pop_savestudy(STUDY,EEG,'savemode','resave');
 
-% convert to a csv file 
-results = cell(60,3,)
-for i = 1:numel(REEG)
-    subject: 'sub-01'
-    session
+% compute average connectivity 
+% export to a csv file to separate analysis
+% note the matrices are symmetric, export only upper triangle
+export_folder = fullfile(STUDY.filepath,['connectivity_results' filesep 'roi_connect']);
+mkdir(export_folder);
 
-    csData = EEG(i).roi.CS;
-    cohData = EEG(i).roi.COH;
-    wpliData = EEG(i).roi.wPLI;
-    mimData = EEG(i).roi.MIM;
-    micData = EEG(i).roi.MIC;
-
-    combinedData{i, 1} = csData;
-    combinedData{i, 2} = cohData;
-    combinedData{i, 3} = wpliData;
-    combinedData{i, 4} = mimData;
-    combinedData{i, 5} = micData;
+% pre-allocate memory
+[~,n,p] = size(EEG(1).roi.CS);
+Nconn   = ((n*p)-n)/2;
+results = NaN(Nconn,size(STUDY.subject,2),max(STUDY.session));
+for c=1:length(connect_types)
+    for s=1:size(EEG,2)
+        % connectivity values
+        tmp = squeeze(nanmean(real(EEG(s).roi.(connect_types{c})),1));
+        tmp = triu(tmp); tmp(tmp==0) = [];
+        % subject - session name
+        subject = str2double(EEG(s).subject(5:end));
+        results(:,subject,EEG(s).session) = tmp';
+    end
+    % export sessions
+    for session = 1:3
+        writetable(array2table(squeeze(results(:,:,session))), ...
+            ['ROI_connect_' connect_types{c} '_session-' num2str(session) '.csv']);
+    end
 end
-
-combinedTable = cell2table(combinedData, 'VariableNames', {'CS', 'COH', 'wPLI', 'MIM', 'MIC'});
-writetable(combinedTable, 'ROI.csv');
-
-% export data
-hermes = fullfile(rawdata_path,['derivatives' filesep 'HERMES']);
-mkdir(hermes)
-for s=1:size(EEG,2)
-    tmp = EEG(s).data;
-    [~,name] = fileparts(EEG(s).filename);
-    save(fullfile(hermes,[name '.mat']),'tmp')
-end
-
-
