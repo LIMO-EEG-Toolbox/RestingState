@@ -29,12 +29,12 @@ if ~exist('picard','file')
 end
 
 % import data and remove unwanted channels
-[STUDY, ALLEEG] = pop_importbids(rawdata_path, ...
+[STUDY, EEG] = pop_importbids(rawdata_path, ...
     'outputdir',fullfile(rawdata_path,'derivatives'),...
     'bidsevent','off',...
     'bidstask','task-eyesclosed');
 STUDY = pop_statparams(STUDY, 'default');
-[~,~,AvgChanlocs] = std_prepare_neighbors(STUDY, ALLEEG, 'force', 'on');
+[~,~,AvgChanlocs] = std_prepare_neighbors(STUDY, EEG, 'force', 'on');
 channel_info = AvgChanlocs.expected_chanlocs;
 save(fullfile(rawdata_path,['derivatives' filesep 'channel_info.mat']),'channel_info')
 
@@ -49,7 +49,7 @@ drawnow
 % interpolate, re-reference to the average, run ICA to remove
 % eye and muscle artefacts, delete bad segments
 
-for s=1:size(EEG,2)
+parfor s=1:size(EEG,2)
     try
         % downsample
         if EEG(s).srate ~= 250
@@ -72,7 +72,7 @@ for s=1:size(EEG,2)
         EEG(s) = pop_reref(EEG(s),[],'interpchan','off');
         
         % ICA cleaning
-        EEG(s) = pop_runica(EEG(s), 'icatype','picard','concatcond','on','options',{'pca',EEG(s).nbchan-1});
+        EEG(s) = pop_runica(EEG(s), 'icatype','picard','maxiter',500,'mode','standard','concatcond','on','options',{'pca',EEG(s).nbchan-1});
         EEG(s) = pop_iclabel(EEG(s), 'default');
         EEG(s) = pop_icflag(EEG(s),[NaN NaN;0.8 1;0.8 1;NaN NaN;NaN NaN;NaN NaN;NaN NaN]);
         EEG(s) = pop_subcomp(EEG(s),[],0);
@@ -85,9 +85,10 @@ for s=1:size(EEG,2)
         
         % epoching -- add random markers to create epochs we can use for power,
         % correlations, etc ...
-        EEG(s) = eeg_regepochs(EEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
-            'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
-        EEG(s) = pop_epoch(EEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+        % EEG(s) = eeg_regepochs(EEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
+        %     'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
+        % EEG(s) = pop_epoch(EEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+        EEG(s) = pop_saveset(EEG(s),'savemode''resave')
     catch pipe_error
         error_report{s} = pipe_error.message; %#ok<SAGROW>
     end
@@ -96,31 +97,51 @@ end
 % Save study
 if exist('error_report','var')
     mask = cellfun(@(x) ~isempty(x), error_report); % which subject/session
-    EEG(mask)           = []; % delete from data structure
-    % find subject names
-    idx2 = 1;
-    bad_sub = cell(1,length(find(mask)));
-    for idx = find(mask)
-        if ~isempty(STUDY.datasetinfo(idx).subject)
-            bad_sub{idx2} = STUDY.datasetinfo(idx).subject;
-            idx2=idx2+1;
-        end
-    end
-    % delete from STUDY if all 3 sessions are bad
-    bad_names = unique(bad_sub);
-    for s=1:length(bad_names)
-        if sum(strcmp(bad_names{s},bad_sub)) == nsess
-            STUDY.subject(strcmp(bad_names{s},STUDY.subject)) = [];
-        end
-    end
-    STUDY.datasetinfo(mask) = [];
+    STUDY = std_rmdat(STUDY, EEG, 'datinds', find(mask));
+    EEG(find(mask)) = [];
 end
-
-STUDY = pop_savestudy(STUDY, EEG, ...
-    'filename', 'Resting_state', ...
-    'filepath', fullfile(rawdata_path,'derivatives'));
+[STUDY,EEG] = pop_savestudy(STUDY,EEG,'savemode''resave');
 
 % figure; pop_spectopo(ALLEEG(1), 1, [], 'EEG' , 'freq', [2 10 22], 'freqrange',[5 60],'electrodes','off');
+
+%% connectivity [STUDY, EEG] = pop_loadstudy
+% Compute source level FCM on Regions of interest with ROI connect.
+vol       = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_vol.mat']);
+mri       = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'standard_mri.mat']);
+elec      = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'elec' filesep 'standard_1005.elc']);
+leadfield = fullfile(fileparts(which("eegplugin_dipfit")),'LORETA-Talairach-BAs.mat');
+parfor s=2:size(EEG,2)
+    EEG(s)  = pop_dipfit_settings( EEG(s),'hdmfile',vol,'mrifile',mri,'chanfile',elec, ...
+        'coordformat','MNI','coord_transform',[4.4114e-06 -1.4064e-05 7.5546e-06 1.2424e-07 -1.614e-07 -1.5708 1 1 1] ,'chansel',1:61);
+    % EEG(s)  = pop_multifit( EEG(s),[],'threshold',100,'plotopt',{'normlen','on'});
+    EEG(s)  = pop_leadfield( EEG(s),'sourcemodel',leadfield,'sourcemodel2mni',[],'downsample',1);
+    EEG(s).roi = [];
+    EEG(s) = pop_roi_activity(EEG(s),'model','LCMV','modelparams',{0.05},'atlas','Brain-Regions','nPCA',3);
+    EEG(s) = pop_roi_connect(REEG(s),'morder',20,'naccu',[],'methods',{'CS','COH','wPLI','MIM','MIC'});
+    EEG(s) = pop_saveset(EEG(s),'savemode''resave');
+end
+
+% convert to a csv file 
+results = cell(60,3,)
+for i = 1:numel(REEG)
+    subject: 'sub-01'
+    session
+
+    csData = EEG(i).roi.CS;
+    cohData = EEG(i).roi.COH;
+    wpliData = EEG(i).roi.wPLI;
+    mimData = EEG(i).roi.MIM;
+    micData = EEG(i).roi.MIC;
+
+    combinedData{i, 1} = csData;
+    combinedData{i, 2} = cohData;
+    combinedData{i, 3} = wpliData;
+    combinedData{i, 4} = mimData;
+    combinedData{i, 5} = micData;
+end
+
+combinedTable = cell2table(combinedData, 'VariableNames', {'CS', 'COH', 'wPLI', 'MIM', 'MIC'});
+writetable(combinedTable, 'ROI.csv');
 
 % export data
 hermes = fullfile(rawdata_path,['derivatives' filesep 'HERMES']);
@@ -130,4 +151,5 @@ for s=1:size(EEG,2)
     [~,name] = fileparts(EEG(s).filename);
     save(fullfile(hermes,[name '.mat']),'tmp')
 end
+
 
