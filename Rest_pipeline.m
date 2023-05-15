@@ -82,13 +82,7 @@ parfor s=1:size(EEG,2)
             'LineNoiseCriterion','off','Highpass','off','BurstCriterion',20,...
             'WindowCriterion',0.25,'BurstRejection','on','Distance','Euclidian',...
             'WindowCriterionTolerances',[-Inf 7] );
-        
-        % epoching -- add random markers to create epochs we can use for power,
-        % correlations, etc ...
-        % EEG(s) = eeg_regepochs(EEG(s),'recurrence',epoch_length * (1-epoch_overlap),...
-        %     'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
-        % EEG(s) = pop_epoch(EEG(s),{'epoch_start'},[0 epoch_length],'epochinfo','yes');
-        EEG(s) = pop_saveset(EEG(s),'savemode''resave')
+        EEG(s) = pop_saveset(EEG(s),'savemode','resave')
     catch pipe_error
         error_report{s} = pipe_error.message; %#ok<SAGROW>
     end
@@ -113,10 +107,9 @@ connect_types = {'CS','COH','wPLI','MIM','MIC'};
 parfor s=1:size(EEG,2)
     EEG(s)  = pop_dipfit_settings( EEG(s),'hdmfile',vol,'mrifile',mri,'chanfile',elec, ...
         'coordformat','MNI','coord_transform',[4.4114e-06 -1.4064e-05 7.5546e-06 1.2424e-07 -1.614e-07 -1.5708 1 1 1] ,'chansel',1:61);
-    % EEG(s)  = pop_multifit( EEG(s),[],'threshold',100,'plotopt',{'normlen','on'});
     EEG(s)  = pop_leadfield( EEG(s),'sourcemodel',leadfield,'sourcemodel2mni',[0 -24 -45 0 0 -1.5708 1000 1000 1000],'downsample',1);
     EEG(s).roi = [];
-    EEG(s) = pop_roi_activity(EEG(s),'model','LCMV','modelparams',{0.05},'atlas','Desikan-Kilianny','nPCA',3);
+    EEG(s) = pop_roi_activity(EEG(s),'resample',100,'model','LCMV','modelparams',{0.05},'atlas','Mindboggle','nPCA',3);
     EEG(s) = pop_roi_connect(EEG(s),'morder',20,'naccu',[],'methods',connect_types);
 end
 [STUDY,EEG] = pop_savestudy(STUDY,EEG,'savemode','resave');
@@ -130,8 +123,8 @@ mkdir(export_folder);
 % pre-allocate memory
 [~,n,p] = size(EEG(1).roi.CS);
 Nconn   = ((n*p)-n)/2;
-results = NaN(Nconn,size(STUDY.subject,2),max(STUDY.session));
 for c=1:length(connect_types)
+    results = NaN(Nconn,size(STUDY.subject,2),max(STUDY.session));
     for s=1:size(EEG,2)
         % connectivity values
         tmp = squeeze(nanmean(real(EEG(s).roi.(connect_types{c})),1));
@@ -143,6 +136,21 @@ for c=1:length(connect_types)
     % export sessions
     for session = 1:3
         writetable(array2table(squeeze(results(:,:,session))), ...
-            ['ROI_connect_' connect_types{c} '_session-' num2str(session) '.csv']);
+            fullfile(export_folder,['ROI_connect_' connect_types{c} '_session-' num2str(session) '.csv']));
     end
+end
+    
+%% for channel based connectivity
+% epoching -- add random markers to create epochs we can use 
+EEG = eeg_regepochs(EEG,'recurrence',epoch_length * (1-epoch_overlap),...
+    'limits',[0 epoch_length * (1-epoch_overlap)],'eventtype','epoch_start','extractepochs','off');
+EEG = pop_epoch(EEG,{'epoch_start'},[0 epoch_length],'epochinfo','yes');
+
+% export data
+hermes = fullfile(STUDY.filepath,'HERMES');
+mkdir(hermes)
+for s=1:size(ALLEEG,2)
+    tmp = ALLEEG(s).data;
+    [~,name] = fileparts(ALLEEG(s).filename);
+    save(fullfile(hermes,[name '.mat']),'tmp')
 end
