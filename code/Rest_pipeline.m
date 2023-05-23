@@ -104,6 +104,13 @@ mri           = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' fi
 elec          = fullfile(fileparts(which("eegplugin_dipfit")),['standard_BEM' filesep 'elec' filesep 'standard_1005.elc']);
 leadfield     = fullfile(fileparts(which("eegplugin_dipfit")),'tess_cortex_mid_low_2000V.mat');
 connect_types = {'CS','COH','wPLI','MIM','MIC'};
+measures = { 'CS' 'COH' 'DTF'  'wPLI'  'PDC'  'MIM'  'MIC' 'GC' }; 
+% measures = { 'CS' 'COH' 'wPLI'  'PDC'  'MIM'  'MIC' 'GC' }; 
+% measures = { 'CS' 'COH' 'MIM' 'GC' }; 
+% measures = { 'CS' 'COH' 'MIM' }; 
+% measures = { 'TRGC' 'MIM' }; 
+% measures = { 'MIM' }; 
+
 parfor s=1:size(EEG,2)
     EEG(s)  = pop_dipfit_settings( EEG(s),'hdmfile',vol,'mrifile',mri,'chanfile',elec, ...
         'coordformat','MNI','coord_transform',[4.4114e-06 -1.4064e-05 7.5546e-06 1.2424e-07 -1.614e-07 -1.5708 1 1 1] ,'chansel',1:61);
