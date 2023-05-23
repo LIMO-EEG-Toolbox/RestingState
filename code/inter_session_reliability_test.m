@@ -8,7 +8,7 @@ function inter_session_reliability_test
 [WithinDiff, HDIW, BetweenDiff, HDIB, freq, indices] = inter_session_reliability(array2table(randn(100,1000)),...
     array2table(randn(100,1000)),'difference');
 if freq ~= 0
-    error('0% of within subject expecxted diffeent')
+    error('0% of within subject expected diffeent')
 end
 
 [WithinDiff, HDIW, BetweenDiff, HDIB, freq, indices] = inter_session_reliability(array2table(randn(100,1000)),...
