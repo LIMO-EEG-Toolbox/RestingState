@@ -1,8 +1,11 @@
+
+
 export_folder = fullfile(STUDY.filepath,['connectivity_results' filesep 'HERMES_CSVS']);
 connect_types = {'COH','COR','wPLI','iCOH','xCOR','DPI','PLI','PLV','RHO'};
 mkdir(export_folder);
 
-
+[n,p,~] = size(indexes.COH.data{1});
+Nconn   = ((n*p)-n)/2;
 for c=1:length(connect_types)
     results = NaN(Nconn,size(STUDY.subject,2),max(STUDY.session));
     for s=1:size(EEG,2)
