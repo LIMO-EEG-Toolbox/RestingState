@@ -53,3 +53,48 @@ for c=1:length(hermes_metrics)
             fullfile(export_folder,['Hermes_csv_1' connect_types{c} '_session-' num2str(session) '.csv']));
     end
 end
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+export_folder = fullfile(pwd,['connectivity_results' filesep 'HERMES_CSVS']);
+hermes_metrics = {'COH','COR','iCOH','PLV'};
+mkdir(export_folder);
+
+num_subs = size(indexes.(hermes_metrics{1}).data,2)
+num_conditions = size(indexes.(hermes_metrics{1}).data,1)
+
+% Check if a given metric needs to be averaged over frequencies
+for s=1:length(hermes_metrics)
+    if all(~any(strcmp(indexes.(hermes_metrics{s}).dimensions,'frequency'))) == 0
+       averagedArray = cell(num_subs,num_conditions);
+       for i = 1:num_subs
+            for j = 1:num_conditions
+                data = indexes.(hermes_metrics{s}).data{i,j} % Access the data from the cell array
+                averagedData = mean(data,3) % Compute the average along the third dimension (frequencies)
+                averagedArray{i, j} = averagedData; % Store the averaged data in a new cell array
+            end    
+        end
+end        
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Average the data over the frequencies dimension
+averagedArray = cell(3, 3);
+for i = 1:num_subs
+    for j = 1:num_conditions
+        data = indexes.COH.data{i, j}; % Access the data from the cell array
+        averagedData = mean(data, 3); % Compute the average along the third dimension (frequencies)
+        averagedArray{i, j} = averagedData; % Store the averaged data in a new cell array
+    end
+end
+
+if ~any(strcmp(CELL,'a'))
+
+
+
+
