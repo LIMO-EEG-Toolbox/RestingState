@@ -32,10 +32,10 @@ size of the right side is 5970-by-1.'
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-This works hopefully:
+%This works hopefully:
 
 export_folder = fullfile(pwd, ['connectivity_results' filesep 'HERMES_CSVS']);
-hermes_metrics = {'COH', 'COR', 'iCOH','xCOR','DPI','PLI', 'PLV','RHO','wPLI'};
+hermes_metrics = {'COH', 'COR', 'iCOH','DPI','PLI', 'PLV','RHO','wPLI'};
 mkdir(export_folder);
 
 num_subs = size(indexes.(hermes_metrics{1}).data, 2);
@@ -85,3 +85,27 @@ end
 
 
 indexes.(hermes_metrics{1}).data{5, j};
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+export_folder = fullfile(pwd, ['connectivity_results' filesep 'HERMES_CSVS']);
+hermes_metrics = {'COH', 'COR', 'iCOH','DPI','PLI', 'PLV','RHO','wPLI'};
+mkdir(export_folder);
+
+num_subs = size(indexes.(hermes_metrics{1}).data, 2);
+num_sessions = size(indexes.(hermes_metrics{1}).data, 1);
+
+% Check if a given metric needs to be averaged over frequencies/bands:
+for s = 1:length(hermes_metrics)
+    if (all(~any(strcmp(indexes.(hermes_metrics{s}).dimensions, 'frequency')))  == 0 | all(~any(strcmp(indexes.(hermes_metrics{s}).dimensions, 'band')))  == 0 | all(~any(strcmp(indexes.(hermes_metrics{s}).dimensions, 'lag'))) )
+        for i = 1:num_subs
+            for j = 1:num_sessions
+                data = indexes.(hermes_metrics{s}).data{j, i}; % Access the data from the metric
+                averagedData = mean(data, 3); % Compute the average along the third dimension (frequencies/bands)
+                indexes.(hermes_metrics{s}).data{j, i} = averagedData; % Assign the averaged data back to metrics
+            end
+        end
+    end
+end
+
+if any(ismember(indexes.(hermes_metrics{s}).dimensions, {'frequency', 'band', 'lag'}))
