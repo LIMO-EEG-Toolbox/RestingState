@@ -78,7 +78,7 @@ for s = 1:length(hermes_metrics)
         table_data.Properties.VariableNames = var_names;
         
         % Create a CSV file for the current session:
-        csv_filename = fullfile(export_folder, ['session' num2str(j) '_' hermes_metrics{s} '.csv']);
+        csv_filename = fullfile(export_folder, ['HERMES_session' num2str(j) '_' hermes_metrics{s} '.csv']);
         writetable(table_data, csv_filename);
     end
 end
