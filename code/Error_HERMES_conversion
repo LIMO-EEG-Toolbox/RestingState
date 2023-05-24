@@ -26,3 +26,30 @@ end
 
 'Unable to perform assignment because the size of the left side is 1770-by-1 and the
 size of the right side is 5970-by-1.'
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+export_folder = fullfile(pwd,['connectivity_results' filesep 'HERMES_CSVS']);
+hermes_metrics = {'COH','COR','iCOH','PLV'};
+mkdir(export_folder);
+
+[n,p,~] = size(indexes.COH.data{1});
+Nconn   = ((n*p)-n)/2;
+for c=1:length(hermes_metrics)
+    results = NaN(Nconn,size(STUDY.subject,2),max(STUDY.session));
+    for s=1:size(EEG,2)
+        % connectivity values
+        tmp = squeeze(nanmean(real(indexes.(hermes_metrics{c}).data{s}),3));
+        tmp = triu(tmp); tmp(tmp==0) = [];
+        % subject - session name
+        subject = str2double(EEG(s).subject(5:end));
+        results(:,subject,EEG(s).session) = tmp';
+    end
+    % export sessions
+    for session = 1:3
+        writetable(array2table(squeeze(results(:,:,session))), ...
+            fullfile(export_folder,['Hermes_csv_1' connect_types{c} '_session-' num2str(session) '.csv']));
+    end
+end
