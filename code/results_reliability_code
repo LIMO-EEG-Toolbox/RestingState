@@ -1,0 +1,8 @@
+%Save the inter_session_reliability.m script in the same working directory as csv files
+
+sessionA = 'HERMES_session1_COH.csv';
+sessionB = 'HERMES_session2_COH.csv';
+metric = 'Difference';
+
+% Call the function with the variables
+[meanDiff, CIDiff, meanCorr, CICorr, freq, indices] = inter_session_reliability(sessionA, sessionB, metric);
