@@ -27,7 +27,7 @@ function varargout = inter_session_reliability(sessionA,sessionB,metric)
 %
 % sessionA = ['..' filesep 'connectivity_results' filesep 'roi_connect' filesep 'ROI_connect_CS_session-1.csv'];
 % sessionB = ['..' filesep 'connectivity_results' filesep 'roi_connect' filesep 'ROI_connect_CS_session-2.csv'];
-% [WithinDiff, HDIW, BetweenDiff, HDIB, freq, indices] = inter_session_reliability(sessionA,sessionB,'difference')
+% [WithinDiff, HDIW, BetweenDiff, HDIB, freq, ~, opposite, chi, pvalue] = inter_session_reliability(sessionA,sessionB,'difference')
 
 
 %% get the data
