@@ -1,153 +1,44 @@
 %Save the inter_session_reliability.m script in the same working directory as csv files
-
-sessionA = 'HERMES_session1_COH.csv';
-sessionB = 'HERMES_session2_COH.csv';
-metric = 'Difference';
-
-% Call the function with the variables
-[meanDiff, CIDiff, meanCorr, CICorr, freq, indices] = inter_session_reliability(sessionA, sessionB, metric);
-
-
-
-
-
-
-
-
-
-connectivity_metrics = {'COH','wPLI'}
-
-
-
-
-% Initialize a cell array to store the results
-results = cell(length(connectivity_metrics), 1);
-
-% Loop through the connectivity metrics
-for i = 1:length(connectivity_metrics)
-    metric = connectivity_metrics{i};
-
-    % Perform the comparisons for the current metric
-    % Compare session 1 and session 2
-    sessionA = 'HERMES_session1_%s.csv';
-    sessionB = 'HERMES_session2_%s.csv';
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'difference');
-    [withinCorr, withinCorrCI, betweenCorr, betweenCorrCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'correlation');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'spearman');
-
-    % Store the results in the cell array
-    results{i}.metric = metric;
-    results{i}.session1_session2 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinCorr, 'correlation_CI', withinCorrCI, 'spearman', withinSpearman, 'spearman_CI', withinSpearmanCI);
-
-    % Compare session 1 and session 3
-    sessionA = 'HERMES_session1_%s.csv';
-    sessionB = 'HERMES_session3_%s.csv';
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'difference');
-    [withinCorr, withinCorrCI, betweenCorr, betweenCorrCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'correlation');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'spearman');
-
-    % Store the results in the cell array
-    results{i}.session1_session3 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinCorr, 'correlation_CI', withinCorrCI, 'spearman', withinSpearman, 'spearman_CI', withinSpearmanCI);
-
-    % Compare session 2 and session 3
-    sessionA = 'HERMES_session2_%s.csv';
-    sessionB = 'HERMES_session3_%s.csv';
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'difference');
-    [withinCorr, withinCorrCI, betweenCorr, betweenCorrCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'correlation');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'spearman');
-
-    % Store the results in the cell array
-    results{i}.session2_session3 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinCorr, 'correlation_CI', withinCorrCI, 'spearman', withinSpear)
-    
-end 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Initialize a cell array to store the results
-connectivity_metrics = {'COH','wPLI'}
-results = cell(length(connectivity_metrics), 1);
-
-% Loop through the connectivity metrics
-for i = 1:length(connectivity_metrics)
-
-    % Perform the comparisons for the current metric
-    % Compare session 1 and session 2
-    sessionA = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [withinPearson, withinPearsonCI, betweenPearson, betweenPearsonCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
-
-    % Store the results in the cell array
-    results.(connectivity_metrics{i}).connectivity_metrics{i} = connectivity_metrics{i};
-    results.(connectivity_metrics{i}).session1_session2 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinPearson, 'correlation_CI', withinPearsonCI, 'spearman', withinSpearman, 'spearman_CI', withinSpearmanCI);
-
-    % Compare session 1 and session 3
-    sessionA = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [withinPearson, withinPearsonCI, betweenPearson, betweenPearsonCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
-
-    % Store the results in the cell array
-    results.(connectivity_metrics{i}).session1_session3 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinPearson, 'correlation_CI', withinPearsonCI, 'spearman', withinSpearman, 'spearman_CI', withinSpearmanCI);
-
-    % Compare session 2 and session 3
-    sessionA = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
-    [withinDiff, withinDiffCI, betweenDiff, betweenDiffCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [withinPearson, withinPearsonCI, betweenPearson, betweenPearsonCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [withinSpearman, withinSpearmanCI, betweenSpearman, betweenSpearmanCI, freq, indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
-
-    % Store the results in the cell array
-    results.(connectivity_metrics{i}).session2_session3 = struct('difference', withinDiff, 'difference_CI', withinDiffCI, 'correlation', withinPearson, 'correlation_CI', withinPearsonCI, 'spearman', withinSpearman, 'spearman_CI', withinSpearmanCI);
-    
- end
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
- 
- % Initialize a cell array to store the results
+%Put in your metrics and preallocate memory to store results in matlab struct
 connectivity_metrics = {'COH', 'wPLI'};
 results = cell(length(connectivity_metrics), 1);
 
-% Loop through the connectivity metrics
+%For each metric, commparing each session ie ses01&ses02, ses01&ses03, ses02%ses03
+
+
+%Loop through the connectivity metrics
 for i = 1:length(connectivity_metrics)
-
-    % Perform the comparisons for the current metric
-    % Compare session 1 and session 2
-    sessionA = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
-
-    % Store the results in the cell array
+    
+    session1 = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
+    session2 = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
+    session3 = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
+    
+    %Perform the comparisons for the current metric for each of metric-paramters(Difference,Pearson,Spearman)
+    %Store the results in the cell array
+    
+    %Ses1Ses2
+    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session1, session2, 'Difference');
+    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session1, session2, 'Pearson');
+    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session1, session2, 'Spearman');
     results{i}.connectivity_metrics = connectivity_metrics{i};
     results{i}.session1_session2 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
 
-    % Compare session 1 and session 3
-    sessionA = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
-
-    % Store the results in the cell array
+    %Ses1Ses3
+    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session1, session3, 'Difference');
+    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session1, session3, 'Pearson');
+    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session1, session3, 'Spearman');
     results{i}.session1_session3 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices) 
 
-    % Compare session 2 and session 3
+    %Ses2Ses3
     sessionA = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
     sessionB = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(sessionA, sessionB, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(sessionA, sessionB, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(sessionA, sessionB, 'Spearman');
+    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session2, session3, 'Difference');
+    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session2, session3, 'Pearson');
+    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session2, session3, 'Spearman');
  
-    % Store the results in the cell array
     results{i}.session2_session3 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices) 
     
  end
- 
- 
- 
  
  
  
