@@ -7,11 +7,23 @@ function varargout = inter_session_reliability(sessionA,sessionB,metric)
 % obtain the frequency of subjects who have a smaller difference or higher
 %                         correlation between sessions than among subjects
 %
-% FORMAT [mean,CI, freq, indices] = inter_session_reliability(sessionA,sessionB,'metric')
-%        values for the metric
+% FORMAT [WithinDiff, HDIW, BetweenDiff, HDIB] = inter_session_reliability(sessionA,sessionB,'metric')
+%        [~,~,~,~,freq, indices, opposite, chi, pvalue] = inter_session_reliability(sessionA,sessionB,'metric')
+%        
+% INPUTS sessionA and sessionB are csv files to be read as table, no raw name expected
+%                              measures are computed based on columns
+%        'metric' is 'Difference' or 'Spearman' or 'Pearson'
 %
-% INPUTS sessionA and sessionB are csv files to be read as table, no header
-%        expected, measures are computed based on columns
+% OUTPUTS WithinDiff the trimmed mean difference or correlation of each subject with itself
+%         HDIW the highest densiy interval across subjects for Within metric
+%         BetweenDiff the trimmed mean difference or correlation of each subject with all other sibjects
+%         HDIB the highest densiy interval across subjects for Between metric
+%         freq the frequency of subject having a difference smaller than the group or a correlation higher than the group
+%         indices flag corrresponding subjects
+%         opposite the frequency of between subject metric smaller/bigger than the within subject metric
+%         chi is the chi square value evaluated for 1 degree of freedom
+%         p-value returns the prob that the observed frequencies are different from 50% 
+%         p-value = 1 - chi^2 cumulative distribution function (chi value,1)
 %
 % sessionA = ['..' filesep 'connectivity_results' filesep 'roi_connect' filesep 'ROI_connect_CS_session-1.csv'];
 % sessionB = ['..' filesep 'connectivity_results' filesep 'roi_connect' filesep 'ROI_connect_CS_session-2.csv'];
@@ -81,6 +93,14 @@ else
     varargout{4} = bootCI(BetweenDiff);
     varargout{5} = mean(indices);
     varargout{6} = indices;
+end
+
+if nargout > 6
+    varargout{7} = sum(varargout{3} < varargout{2}(1));
+    observed     = [sum(indices) sum(varargout{7})];
+    expected     = repmat(size(D,2)/2,1,2);
+    varargout{8} = sum((observed-expected).^2./expected);
+    varargout{9} = chi2cdf(varargout{7},1,'upper');
 end
 end
 
