@@ -96,8 +96,9 @@ else
 end
 
 if nargout > 6
-    varargout{7} = sum(varargout{3} < varargout{2}(1));
-    observed     = [sum(indices) sum(varargout{7})];
+    varargout{7} = mean(varargout{3} < varargout{2}(1));
+    opposite     = sum(varargout{3} < varargout{2}(1));
+    observed     = [sum(indices) opposite];
     expected     = repmat(size(D,2)/2,1,2);
     varargout{8} = sum((observed-expected).^2./expected);
     varargout{9} = chi2cdf(varargout{7},1,'upper');
