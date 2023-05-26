@@ -16,39 +16,29 @@ for i = 1:length(connectivity_metrics)
     
     %Perform the comparisons for the current metric for each of metric-paramters(Difference,Pearson,Spearman)
     %Store the results in the cell array
-    
-    %Ses1Ses2
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session1, session2, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session1, session2, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session1, session2, 'Spearman');
+    [Diff_withinDiff, Diff_HDIW, Diff_BetweenDiff, Diff_HDIB, Diff_freq, Diff_indices] = inter_session_reliability(session1, session2, 'Difference');
+    [Pear_withinDiff, Pear_HDIW, Pear_BetweenDiff, Pear_HDIB, Pear_freq, Pear_indices] = inter_session_reliability(session1, session2, 'Pearson');
+    [Spear_withinDiff, Spear_HDIW, Spear_BetweenDiff, Spear_HDIB, Spear_freq, Spear_indices] = inter_session_reliability(session1, session2, 'Spearman');
     results{i}.connectivity_metrics = connectivity_metrics{i};
-    results{i}.session1_session2 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
+    results{i}.session1_session2 = struct('Diff_withinDiff', Diff_withinDiff, 'Diff_HDIW', Diff_HDIW, 'Diff_BetweenDiff', Diff_BetweenDiff, 'Diff_HDIB', Diff_HDIB,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_withinDiff', Pear_withinDiff, 'Pear_HDIW', Pear_HDIW, 'Pear_BetweenDiff', Pear_BetweenDiff, 'Pear_HDIB', Pear_HDIB,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_withinDiff', Spear_withinDiff, 'Spear_HDIW', Spear_HDIW, 'Spear_BetweenDiff', Spear_BetweenDiff, 'Spear_HDIB', Spear_HDIB,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
 
-    %Ses1Ses3
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session1, session3, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session1, session3, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session1, session3, 'Spearman');
-    results{i}.session1_session3 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices) 
+    [Diff_withinDiff, Diff_HDIW, Diff_BetweenDiff, Diff_HDIB, Diff_freq, Diff_indices] = inter_session_reliability(session1, session3, 'Difference');
+    [Pear_withinDiff, Pear_HDIW, Pear_BetweenDiff, Pear_HDIB, Pear_freq, Pear_indices] = inter_session_reliability(session1, session3, 'Pearson');
+    [Spear_withinDiff, Spear_HDIW, Spear_BetweenDiff, Spear_HDIB, Spear_freq, Spear_indices] = inter_session_reliability(session1, session3, 'Spearman');
+    results{i}.session1_session3 = struct('Diff_withinDiff', Diff_withinDiff, 'Diff_HDIW', Diff_HDIW, 'Diff_BetweenDiff', Diff_BetweenDiff, 'Diff_HDIB', Diff_HDIB,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_withinDiff', Pear_withinDiff, 'Pear_HDIW', Pear_HDIW, 'Pear_BetweenDiff', Pear_BetweenDiff, 'Pear_HDIB', Pear_HDIB,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_withinDiff', Spear_withinDiff, 'Spear_HDIW', Spear_HDIW, 'Spear_BetweenDiff', Spear_BetweenDiff, 'Spear_HDIB', Spear_HDIB,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
+ 
+    [Diff_withinDiff, Diff_HDIW, Diff_BetweenDiff, Diff_HDIB, Diff_freq, Diff_indices] = inter_session_reliability(session2, session3, 'Difference');
+    [Pear_withinDiff, Pear_HDIW, Pear_BetweenDiff, Pear_HDIB, Pear_freq, Pear_indices] = inter_session_reliability(session2, session3, 'Pearson');
+    [Spear_withinDiff, Spear_HDIW, Spear_BetweenDiff, Spear_HDIB, Spear_freq, Spear_indices] = inter_session_reliability(session2, session3, 'Spearman');
+    results{i}.session2_session3 = struct('Diff_withinDiff', Diff_withinDiff, 'Diff_HDIW', Diff_HDIW, 'Diff_BetweenDiff', Diff_BetweenDiff, 'Diff_HDIB', Diff_HDIB,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_withinDiff', Pear_withinDiff, 'Pear_HDIW', Pear_HDIW, 'Pear_BetweenDiff', Pear_BetweenDiff, 'Pear_HDIB', Pear_HDIB,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_withinDiff', Spear_withinDiff, 'Spear_HDIW', Spear_HDIW, 'Spear_BetweenDiff', Spear_BetweenDiff, 'Spear_HDIB', Spear_HDIB,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
+ 
+end
+   
+ 
+ 
+ 
+ 
+ 
 
-    %Ses2Ses3
-    sessionA = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
-    sessionB = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
-    [Diff_meanDiff, Diff_CIDiff, Diff_meanCorr, Diff_CICorr, Diff_freq, Diff_indices] = inter_session_reliability(session2, session3, 'Difference');
-    [Pear_meanDiff, Pear_CIDiff, Pear_meanCorr, Pear_CICorr, Pear_freq, Pear_indices] = inter_session_reliability(session2, session3, 'Pearson');
-    [Spear_meanDiff, Spear_CIDiff, Spear_meanCorr, Spear_CICorr, Spear_freq, Spear_indices] = inter_session_reliability(session2, session3, 'Spearman');
- 
-    results{i}.session2_session3 = struct('Diff_meanDiff', Diff_meanDiff, 'Diff_CIDiff', Diff_CIDiff, 'Diff_meanCorr', Diff_meanCorr, 'Diff_CICorr', Diff_CICorr,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_meanDiff', Pear_meanDiff, 'Pear_CIDiff', Pear_CIDiff, 'Pear_meanCorr', Pear_meanCorr, 'Pear_CICorr', Pear_CICorr,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_meanDiff', Spear_meanDiff, 'Spear_CIDiff', Spear_CIDiff, 'Spear_meanCorr', Spear_meanCorr, 'Spear_CICorr', Spear_CICorr,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices) 
-    
- end
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  
  
