@@ -1,5 +1,6 @@
 %Save the inter_session_reliability.m script in the same working directory as csv files
 %Put in your metrics and preallocate memory to store results in matlab cell array
+
 connectivity_metrics = {'COH', 'wPLI'};
 results = cell(length(connectivity_metrics), 1);
 
