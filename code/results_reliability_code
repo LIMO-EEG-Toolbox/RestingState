@@ -34,6 +34,40 @@ for i = 1:length(connectivity_metrics)
  
 end
    
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Save the inter_session_reliability.m script in the same working directory as csv files
+%Put in your metrics and preallocate memory to store results in matlab cell array
+
+connectivity_metrics = {'COH', 'wPLI'};
+results = cell(length(connectivity_metrics), 1);
+
+%For each metric, commparing each session ie ses01&ses02, ses01&ses03, ses02%ses03
+
+
+%Loop through the connectivity metrics
+for i = 1:length(connectivity_metrics)
+    
+    session1 = ['HERMES_session1_', connectivity_metrics{i}, '.csv'];
+    session2 = ['HERMES_session2_', connectivity_metrics{i}, '.csv'];
+    session3 = ['HERMES_session3_', connectivity_metrics{i}, '.csv'];
+    
+    %Perform the comparisons for the current metric for each of metric-paramters(Difference,Pearson,Spearman)
+    %Store the results in the cell array
+    [Diff_withinDiff, Diff_HDIW, Diff_BetweenDiff, Diff_HDIB, Diff_freq, Diff_indices] = inter_session_reliability(session1, session2, 'Difference');
+    [Pear_withinDiff, Pear_HDIW, Pear_BetweenDiff, Pear_HDIB, Pear_freq, Pear_indices] = inter_session_reliability(session1, session2, 'Pearson');
+    [Spear_withinDiff, Spear_HDIW, Spear_BetweenDiff, Spear_HDIB, Spear_freq, Spear_indices] = inter_session_reliability(session1, session2, 'Spearman');
+    results{i}.connectivity_metrics = connectivity_metrics{i};
+    results{i}.session1_session2 = struct('Diff_withinDiff', Diff_withinDiff, 'Diff_HDIW', Diff_HDIW, 'Diff_BetweenDiff', Diff_BetweenDiff, 'Diff_HDIB', Diff_HDIB,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_withinDiff', Pear_withinDiff, 'Pear_HDIW', Pear_HDIW, 'Pear_BetweenDiff', Pear_BetweenDiff, 'Pear_HDIB', Pear_HDIB,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_withinDiff', Spear_withinDiff, 'Spear_HDIW', Spear_HDIW, 'Spear_BetweenDiff', Spear_BetweenDiff, 'Spear_HDIB', Spear_HDIB,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
+
+    [Diff_withinDiff, Diff_HDIW, Diff_BetweenDiff, Diff_HDIB, Diff_freq, ~, Diff_opposite, Diff_chi, Diff_pvalue] = inter_session_reliability(session1, session3, 'Difference');
+    [Pear_withinDiff, Pear_HDIW, Pear_BetweenDiff, Pear_HDIB, Pear_freq, ~, Pear_opposite, Pear_chi, Pear_pvalue] = inter_session_reliability(session1, session3, 'Pearson');
+    [Spear_withinDiff, Spear_HDIW, Spear_BetweenDiff, Spear_HDIB, Spear_freq, ~, Spear_opposite, Spear_chi, Spear_pvalue] = inter_session_reliability(session1, session3, 'Spearman');
+    results{i}.session1_session3 = struct('Diff_withinDiff', Diff_withinDiff, 'Diff_HDIW', Diff_HDIW, 'Diff_BetweenDiff', Diff_BetweenDiff, 'Diff_HDIB', Diff_HDIB,'Diff_freq', Diff_freq, 'Diff_indices', Diff_indices, 'Pear_withinDiff', Pear_withinDiff, 'Pear_HDIW', Pear_HDIW, 'Pear_BetweenDiff', Pear_BetweenDiff, 'Pear_HDIB', Pear_HDIB,'Pear_freq', Pear_freq, 'Pear_indices', Pear_indices, 'Spear_withinDiff', Spear_withinDiff, 'Spear_HDIW', Spear_HDIW, 'Spear_BetweenDiff', Spear_BetweenDiff, 'Spear_HDIB', Spear_HDIB,'Spear_freq', Spear_freq, 'Spear_indices', Spear_indices)                      
+ 
+  
+end
  
  
  
