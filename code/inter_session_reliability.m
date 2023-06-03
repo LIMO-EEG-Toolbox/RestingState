@@ -101,7 +101,7 @@ if nargout > 6
     observed     = [sum(indices) opposite];
     expected     = repmat(size(D,2)/2,1,2);
     varargout{8} = sum((observed-expected).^2./expected);
-    varargout{9} = chi2cdf(varargout{7},1,'upper');
+    varargout{9} = 1-chi2cdf(varargout{7},1,'upper');
 end
 end
 
